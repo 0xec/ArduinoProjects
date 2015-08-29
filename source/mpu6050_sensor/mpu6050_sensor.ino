@@ -2,6 +2,7 @@
 #include <MPU6050.h>
 #include <Wire.h>
 
+
 MPU6050 sensor;
 
 double t = 0;
@@ -102,7 +103,6 @@ void loop()
 
     double delta_time = (double)(millis() - t) / 1000.0f;
     t = millis();
-
     sensor.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
 
     double tax = (double)ax / 16384.0f;
@@ -110,19 +110,16 @@ void loop()
     double taz = (double)az / 16384.0f;
 
     double Angle_accX = atan2(tay, taz) * 180 / 3.14159;
-
-    double angle_acc = atan2(ay - a_y_offset, az - a_z_offset) * 180.0f / 3.14f;
     double angle_speed = (gx - r_x_offset) / 131.0f;
 
     Roll += angle_speed * delta_time;
-
     Kalman_Filter(Angle_accX, Roll);
 
-    Serial.print(angle_speed);
-    Serial.print(","); Serial.print(Roll);
-    Serial.print(","); Serial.print(Angle_accX);
-    Serial.print(","); Serial.print(Angle);
-    //// Serial.print(","); Serial.print(a_z_offset);
+    //Serial.print(angle_speed); Serial.print(",");
+    Serial.print(Roll); Serial.print(",");
+    Serial.print(Angle_accX); Serial.print(",");
+    Serial.print(Angle);
+    // Serial.print(","); Serial.print(kalman.getAngle());
     Serial.println();
 
     delay(10);
